@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="theme-color" content="#B8D9F0"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<title>Datacentrix Banking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════
+   DATACENTRIX BANKING PWA
+   Light blue theme · 10.1" 1920×1200 tablet
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  /* Light blue palette */
+  --bg:            #C8E6F5;
+  --bg-mid:        #B0D8EF;
+  --bg-deep:       #90C4E4;
+  --white:         #FFFFFF;
+  --card-white:    rgba(255,255,255,0.92);
+  --card-glass:    rgba(255,255,255,0.75);
+  --navy:          #0A2A5E;
+  --navy-mid:      #1040A0;
+  --blue:          #1565C0;
+  --blue-mid:      #1976D2;
+  --accent:        #0D47A1;
+  --accent-light:  #1E88E5;
+  --sky:           #42A5F5;
+  --shadow-card:   0 8px 40px rgba(10,42,94,0.12);
+  --shadow-btn:    0 6px 24px rgba(10,42,94,0.18);
+  --shadow-deep:   0 16px 56px rgba(10,42,94,0.20);
+  --radius-card:   24px;
+  --radius-btn:    16px;
+  --radius-input:  12px;
+  --font-head:     'Outfit', sans-serif;
+  --font-body:     'Inter', sans-serif;
+  /* Tablet sizing for 856dp+ */
+  --tile-w:        100%;
+  --tile-h:        100%;
+  --title-xl:      42px;
+  --title-lg:      32px;
+  --title-md:      24px;
+  --body-lg:       18px;
+  --body-md:       16px;
+  --body-sm:       14px;
+  --label-sm:      12px;
+  --btn-h:         64px;
+  --input-h:       56px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  width:100%;height:100%;overflow:hidden;
+  font-family:var(--font-body);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  touch-action:manipulation;
+  -webkit-user-select:none;
+  user-select:none;
+}
+input,select,textarea{-webkit-user-select:text;user-select:text;font-family:var(--font-body)}
+button{cursor:pointer;border:none;background:none;font-family:var(--font-head)}
+input:focus,select:focus,textarea:focus{outline:none}
+
+/* ── BACKGROUND MESH ──────────────────────────── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 20%, rgba(255,255,255,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(144,196,228,0.6) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(176,216,239,0.4) 0%, transparent 60%),
+    linear-gradient(145deg, #D6EEF8 0%, #B8D9F0 40%, #90C4E4 100%);
+  pointer-events:none;
+}
+
+/* ── APP SHELL ────────────────────────────────── */
+#app{
+  position:fixed;inset:0;z-index:1;
+  display:flex;flex-direction:column;
+}
+
+/* ── TOPBAR ───────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:76px;flex-shrink:0;
+  background:rgba(255,255,255,0.70);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(255,255,255,0.6);
+  box-shadow:0 2px 16px rgba(10,42,94,0.08);
+}
+.topbar-brand{display:flex;align-items:center;gap:14px}
+.logo-mark{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,#0D47A1,#1E88E5);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-size:24px;font-weight:900;color:#fff;
+  box-shadow:0 4px 16px rgba(13,71,161,0.35);
+  flex-shrink:0;
+}
+.brand-text{display:flex;flex-direction:column;gap:1px}
+.brand-name{font-family:var(--font-head);font-size:19px;font-weight:800;color:var(--navy);letter-spacing:0.06em}
+.brand-sub{font-size:11px;color:#5580A0;font-weight:500;letter-spacing:0.04em}
+.topbar-right{display:flex;align-items:center;gap:20px}
+.topbar-clock{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--navy);letter-spacing:0.04em}
+.topbar-secure{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(13,71,161,0.08);border:1px solid rgba(13,71,161,0.15);
+  padding:8px 16px;border-radius:10px;
+  font-size:13px;font-weight:600;color:var(--accent);
+}
+.topbar-secure svg{fill:var(--accent)}
+
+/* ── SCREENS ─────────────────────────────────── */
+.screen{display:none;flex:1;overflow:hidden;position:relative}
+.screen.active{display:flex;flex-direction:column}
+
+/* ══════════════════════════════════════════
+   SCREEN 1 — HOME
+   Four buttons only, clean centred layout
+   ══════════════════════════════════════════ */
+#screen-home{
+  align-items:center;justify-content:center;
+  padding:0 60px;
+  animation:fadeIn .4s ease;
+}
+.home-header{
+  text-align:center;margin-bottom:52px;
+}
+.home-greeting{
+  font-family:var(--font-head);font-size:22px;font-weight:500;
+  color:#4A6E8A;margin-bottom:8px;
+}
+.home-title{
+  font-family:var(--font-head);font-size:var(--title-xl);font-weight:900;
+  color:var(--navy);line-height:1.1;margin-bottom:10px;
+}
+.home-title span{color:var(--accent-light)}
+.home-sub{font-size:var(--body-lg);color:#5580A0;font-weight:400}
+
+/* 2×2 Grid — full tablet layout */
+.home-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:22px;
+  width:100%;
+  max-width:1280px;
+  height:420px;
+}
+.home-btn{
+  position:relative;overflow:hidden;
+  background:var(--card-white);
+  border-radius:var(--radius-card);
+  border:2px solid rgba(255,255,255,0.9);
+  box-shadow:var(--shadow-card);
+  display:flex;align-items:center;
+  padding:32px 36px;gap:28px;
+  text-align:left;color:var(--navy);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+}
+.home-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-deep);
+  border-color:rgba(30,136,229,0.35);
+}
+.home-btn:active{transform:scale(0.98)}
+
+/* coloured left accent strip */
+.home-btn::before{
+  content:'';position:absolute;left:0;top:12px;bottom:12px;
+  width:5px;border-radius:0 4px 4px 0;
+  background:linear-gradient(180deg,var(--accent-light),var(--accent));
+  opacity:0;transition:opacity .2s;
+}
+.home-btn:hover::before{opacity:1}
+
+.btn-icon-wrap{
+  width:80px;height:80px;border-radius:20px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s;
+}
+.home-btn:hover .btn-icon-wrap{transform:scale(1.06)}
+.btn-icon-wrap svg{width:40px;height:40px}
+
+/* individual tile colour themes */
+.home-btn[data-id="id"]      .btn-icon-wrap{background:linear-gradient(135deg,#E3F0FF,#BBDEFB)}
+.home-btn[data-id="id"]      .btn-icon-wrap svg{fill:#1565C0}
+.home-btn[data-id="account"] .btn-icon-wrap{background:linear-gradient(135deg,#E8F5E9,#C8E6C9)}
+.home-btn[data-id="account"] .btn-icon-wrap svg{fill:#2E7D32}
+.home-btn[data-id="loan"]    .btn-icon-wrap{background:linear-gradient(135deg,#FFF8E1,#FFECB3)}
+.home-btn[data-id="loan"]    .btn-icon-wrap svg{fill:#F57F17}
+.home-btn[data-id="services"].btn-icon-wrap{background:linear-gradient(135deg,#F3E5F5,#E1BEE7)}
+.home-btn[data-id="services"].btn-icon-wrap svg{fill:#6A1B9A}
+
+.btn-label{flex:1}
+.btn-title{
+  font-family:var(--font-head);font-size:24px;font-weight:800;
+  color:var(--navy);margin-bottom:6px;line-height:1.2;
+}
+.btn-desc{font-size:var(--body-md);color:#5580A0;font-weight:400;line-height:1.4}
+.btn-arrow{
+  font-size:36px;color:var(--sky);line-height:1;
+  transition:transform .2s;flex-shrink:0;
+}
+.home-btn:hover .btn-arrow{transform:translateX(4px)}
+
+/* Ripple effect */
+.ripple{
+  position:absolute;border-radius:50%;
+  background:rgba(30,136,229,0.15);
+  transform:scale(0);animation:rippleAnim .5s linear;
+  pointer-events:none;
+}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0}}
+
+/* ══════════════════════════════════════════
+   INNER SCREEN LAYOUT (shared)
+   ══════════════════════════════════════════ */
+.inner-screen{
+  display:flex;flex:1;overflow:hidden;
+  animation:slideIn .35s cubic-bezier(.25,.46,.45,.94);
+}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+
+/* Left sidebar */
+.inner-sidebar{
+  width:340px;flex-shrink:0;
+  padding:44px 36px 44px 48px;
+  display:flex;flex-direction:column;
+  border-right:1px solid rgba(255,255,255,0.6);
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.btn-back{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 20px;border-radius:12px;
+  background:rgba(255,255,255,0.7);
+  border:1px solid rgba(10,42,94,0.12);
+  color:var(--navy);font-size:15px;font-weight:600;
+  font-family:var(--font-head);
+  margin-bottom:36px;align-self:flex-start;
+  transition:all .15s;box-shadow:0 2px 8px rgba(10,42,94,0.08);
+}
+.btn-back:hover{background:#fff;box-shadow:var(--shadow-btn);transform:translateX(-2px)}
+.sidebar-badge{
+  display:inline-block;font-size:11px;font-weight:700;
+  letter-spacing:0.12em;color:var(--accent);
+  background:rgba(13,71,161,0.08);border:1px solid rgba(13,71,161,0.18);
+  padding:6px 14px;border-radius:8px;margin-bottom:16px;align-self:flex-start;
+  font-family:var(--font-head);
+}
+.sidebar-title{
+  font-family:var(--font-head);font-size:34px;font-weight:900;
+  color:var(--navy);line-height:1.15;margin-bottom:14px;
+}
+.sidebar-title .hl{color:var(--accent-light)}
+.sidebar-sub{font-size:15px;color:#5580A0;line-height:1.7;margin-bottom:28px}
+
+.sidebar-info{
+  background:rgba(255,255,255,0.75);border-radius:18px;
+  border:1px solid rgba(255,255,255,0.9);
+  padding:20px 22px;margin-top:auto;
+  box-shadow:0 4px 16px rgba(10,42,94,0.06);
+}
+.sidebar-info-label{
+  font-size:11px;font-weight:700;color:#7090A8;
+  letter-spacing:0.1em;margin-bottom:12px;font-family:var(--font-head);
+}
+.sidebar-info-row{
+  display:flex;align-items:center;gap:10px;
+  font-size:14px;color:#3A5A78;margin-bottom:8px;font-weight:500;
+}
+.sidebar-info-row:last-child{margin-bottom:0}
+.sidebar-info-row svg{fill:var(--accent-light);flex-shrink:0}
+
+/* Right form area */
+.inner-form{
+  flex:1;padding:40px 52px 40px 40px;
+  overflow-y:auto;display:flex;flex-direction:column;gap:22px;
+}
+.inner-form::-webkit-scrollbar{width:4px}
+.inner-form::-webkit-scrollbar-track{background:transparent}
+.inner-form::-webkit-scrollbar-thumb{background:rgba(10,42,94,0.15);border-radius:2px}
+
+/* ── FORM ELEMENTS ────────────────────────────── */
+.f-row{display:flex;gap:20px}
+.f-group{display:flex;flex-direction:column;gap:8px;flex:1}
+.f-label{
+  font-size:var(--label-sm);font-weight:700;color:#7090A8;
+  letter-spacing:0.1em;font-family:var(--font-head);
+}
+.f-input{
+  height:var(--input-h);padding:0 18px;
+  background:rgba(255,255,255,0.85);
+  border:1.5px solid rgba(10,42,94,0.12);
+  border-radius:var(--radius-input);
+  color:var(--navy);font-size:var(--body-md);
+  font-family:var(--font-body);
+  transition:border-color .2s,background .2s,box-shadow .2s;
+  width:100%;
+  -webkit-appearance:none;appearance:none;
+}
+.f-input::placeholder{color:#9AB0C4}
+.f-input:focus{
+  border-color:var(--accent-light);
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(30,136,229,0.12);
+}
+select.f-input{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235580A0' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;padding-right:44px;
+  cursor:pointer;
+}
+select.f-input option{background:#fff;color:var(--navy)}
+.f-hint{font-size:12px;color:var(--accent-light);min-height:16px}
+.f-counter{font-size:11px;color:#9AB0C4;text-align:right;margin-top:-4px}
+
+/* Radio group */
+.radio-group{display:flex;flex-direction:column;gap:10px}
+.radio-opt{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 20px;border-radius:12px;cursor:pointer;
+  background:rgba(255,255,255,0.75);
+  border:1.5px solid rgba(10,42,94,0.1);
+  color:var(--navy);font-size:var(--body-md);font-weight:500;
+  transition:all .15s;
+}
+.radio-opt.selected{
+  background:rgba(30,136,229,0.08);
+  border-color:rgba(30,136,229,0.4);color:var(--accent);
+}
+.radio-dot{
+  width:20px;height:20px;border-radius:50%;border:2px solid rgba(10,42,94,0.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .15s;
+}
+.radio-opt.selected .radio-dot{border-color:var(--accent-light);background:var(--accent-light)}
+.radio-opt.selected .radio-dot::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+
+/* Term buttons */
+.term-group{display:flex;flex-wrap:wrap;gap:10px}
+.term-btn{
+  padding:12px 22px;border-radius:10px;
+  font-size:15px;font-weight:700;font-family:var(--font-head);
+  background:rgba(255,255,255,0.75);
+  border:1.5px solid rgba(10,42,94,0.12);
+  color:#5580A0;transition:all .15s;
+}
+.term-btn.active{
+  background:var(--accent);border-color:var(--accent);color:#fff;
+  box-shadow:0 4px 12px rgba(13,71,161,0.3);
+}
+
+/* Security note */
+.f-secure{
+  display:flex;align-items:flex-start;gap:12px;
+  background:rgba(13,71,161,0.06);border-radius:12px;
+  border:1px solid rgba(13,71,161,0.10);
+  padding:14px 18px;font-size:13px;color:#5580A0;line-height:1.6;
+}
+.f-secure svg{fill:var(--accent-light);flex-shrink:0;margin-top:1px}
+
+/* Estimator box */
+.loan-est{
+  background:linear-gradient(135deg,rgba(13,71,161,0.08),rgba(30,136,229,0.06));
+  border:1.5px solid rgba(30,136,229,0.25);border-radius:18px;
+  padding:22px 26px;margin-bottom:4px;
+  animation:fadeIn .3s ease;
+}
+.est-label{font-size:11px;font-weight:700;color:#7090A8;letter-spacing:0.1em;font-family:var(--font-head);margin-bottom:6px}
+.est-amount{font-family:var(--font-head);font-size:34px;font-weight:900;color:var(--navy);margin-bottom:4px}
+.est-note{font-size:12px;color:#7090A8}
+
+/* Option cards (open account choices) */
+.opt-cards{display:flex;flex-direction:column;gap:18px;flex:1;justify-content:center}
+.opt-card{
+  display:flex;align-items:center;gap:24px;
+  padding:28px 28px;border-radius:22px;
+  background:rgba(255,255,255,0.85);
+  border:2px solid rgba(255,255,255,0.9);
+  box-shadow:var(--shadow-card);
+  color:var(--navy);text-align:left;
+  transition:all .18s;cursor:pointer;
+}
+.opt-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-deep);
+  border-color:rgba(30,136,229,0.3);
+  background:#fff;
+}
+.opt-card:active{transform:scale(0.99)}
+.opt-icon{
+  width:72px;height:72px;border-radius:18px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.opt-icon svg{width:36px;height:36px}
+.opt-body{flex:1}
+.opt-title{font-family:var(--font-head);font-size:21px;font-weight:800;color:var(--navy);margin-bottom:5px}
+.opt-desc{font-size:15px;color:#5580A0}
+.opt-arrow{font-size:32px;color:var(--sky);transition:transform .2s}
+.opt-card:hover .opt-arrow{transform:translateX(4px)}
+
+/* Services grid */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:28px 16px;border-radius:20px;
+  background:rgba(255,255,255,0.82);
+  border:1.5px solid rgba(255,255,255,0.9);
+  box-shadow:0 4px 16px rgba(10,42,94,0.08);
+  color:#3A5A78;font-size:15px;font-weight:600;font-family:var(--font-head);
+  transition:all .15s;cursor:pointer;
+  aspect-ratio:1;
+}
+.svc-item:hover{background:#fff;box-shadow:var(--shadow-deep);transform:translateY(-2px);color:var(--navy)}
+.svc-emoji{font-size:38px}
+
+/* Progress steps */
+.prog-wrap{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.prog-step{height:4px;flex:1;border-radius:4px;background:rgba(10,42,94,0.1);transition:background .3s}
+.prog-step.done{background:var(--accent-light)}
+.prog-lbl{font-size:12px;color:#7090A8;white-space:nowrap;margin-left:6px;font-weight:500}
+
+/* ── PRIMARY BUTTON ────────────────────────────── */
+.btn-primary{
+  height:var(--btn-h);border-radius:var(--radius-btn);
+  background:linear-gradient(135deg,#0D47A1,#1E88E5);
+  color:#fff;font-family:var(--font-head);
+  font-size:18px;font-weight:800;letter-spacing:0.02em;
+  box-shadow:var(--shadow-btn);
+  transition:all .2s;width:100%;flex-shrink:0;
+  border:none;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(13,71,161,0.35)}
+.btn-primary:active{transform:scale(0.98)}
+.btn-primary:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+
+/* ══════════════════════════════════════════
+   SUCCESS SCREEN
+   ══════════════════════════════════════════ */
+#screen-success{
+  align-items:center;justify-content:center;
+  padding:48px;
+  animation:fadeIn .4s ease;
+}
+.success-wrap{
+  display:flex;flex-direction:column;
+  align-items:center;gap:22px;max-width:560px;text-align:center;
+}
+.success-ring{
+  width:110px;height:110px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(46,125,50,0.1),rgba(76,175,80,0.15));
+  border:2px solid rgba(76,175,80,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:52px;
+  animation:popIn .5s cubic-bezier(.68,-.55,.27,1.55);
+}
+.success-title{font-family:var(--font-head);font-size:38px;font-weight:900;color:var(--navy)}
+.success-msg{font-size:17px;color:#5580A0;line-height:1.7}
+.success-ref{
+  background:rgba(255,255,255,0.85);border-radius:18px;
+  border:1.5px solid rgba(255,255,255,0.9);
+  box-shadow:var(--shadow-card);
+  padding:22px 48px;
+}
+.ref-lbl{font-size:12px;font-weight:700;color:#7090A8;letter-spacing:0.1em;font-family:var(--font-head);margin-bottom:8px}
+.ref-num{font-family:var(--font-head);font-size:30px;font-weight:900;color:var(--accent)}
+.success-note{font-size:14px;color:#7090A8}
+
+/* ── TOAST ─────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:32px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:rgba(10,42,94,0.92);backdrop-filter:blur(20px);
+  color:#fff;padding:15px 30px;border-radius:14px;
+  font-size:15px;font-weight:600;font-family:var(--font-head);
+  box-shadow:0 8px 32px rgba(0,0,0,0.2);
+  transition:transform .3s ease;pointer-events:none;z-index:999;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── ANIMATIONS ────────────────────────────────── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{transform:scale(0.4);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ── TOPBAR ──────────────────────────────── -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="logo-mark">D</div>
+      <div class="brand-text">
+        <span class="brand-name">DATACENTRIX</span>
+        <span class="brand-sub">Banking Solutions</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-clock" id="clock">00:00</div>
+      <div class="topbar-secure">
+        <svg width="14" height="14" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+        Secured · POPIA
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 1 — HOME (4 buttons only)
+       ══════════════════════════════════════════ -->
+  <section id="screen-home" class="screen active">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:32px 60px;">
+
+      <div class="home-header">
+        <p class="home-greeting">Welcome to</p>
+        <h1 class="home-title">Datacentrix <span>Banking</span></h1>
+        <p class="home-sub">Select a service below to get started</p>
+      </div>
+
+      <div class="home-grid">
+
+        <!-- Button 1: ID Application -->
+        <button class="home-btn" data-id="id" onclick="goTo('id-app');ripple(event,this)">
+          <div class="btn-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM20 18H4V6h16v12zM6.5 10c.83 0 1.5-.67 1.5-1.5S7.33 7 6.5 7 5 7.67 5 8.5 5.67 10 6.5 10zM6.5 11C5.17 11 4 12.17 4 13.5V14h5v-.5C9 12.17 7.83 11 6.5 11zM11 9h6v2h-6zM11 12h4v2h-4z"/></svg>
+          </div>
+          <div class="btn-label">
+            <div class="btn-title">ID Application</div>
+            <div class="btn-desc">Verify your identity securely</div>
+          </div>
+          <div class="btn-arrow">›</div>
+        </button>
+
+        <!-- Button 2: Open Account -->
+        <button class="home-btn" data-id="account" onclick="goTo('open-account');ripple(event,this)">
+          <div class="btn-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
+          </div>
+          <div class="btn-label">
+            <div class="btn-title">Open Account</div>
+            <div class="btn-desc">Start your banking journey</div>
+          </div>
+          <div class="btn-arrow">›</div>
+        </button>
+
+        <!-- Button 3: Loan Application -->
+        <button class="home-btn" data-id="loan" onclick="goTo('loan-app');ripple(event,this)">
+          <div class="btn-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+          </div>
+          <div class="btn-label">
+            <div class="btn-title">Loan Application</div>
+            <div class="btn-desc">Apply for credit quickly</div>
+          </div>
+          <div class="btn-arrow">›</div>
+        </button>
+
+        <!-- Button 4: Services -->
+        <button class="home-btn" data-id="services" onclick="goTo('services');ripple(event,this)">
+          <div class="btn-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.03c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1 0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.58 1.69-.98l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66z"/></svg>
+          </div>
+          <div class="btn-label">
+            <div class="btn-title">Services</div>
+            <div class="btn-desc">More banking options</div>
+          </div>
+          <div class="btn-arrow">›</div>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 2 — ID APPLICATION
+       ══════════════════════════════════════════ -->
+  <section id="screen-id-app" class="screen">
+    <div class="inner-screen">
+
+      <div class="inner-sidebar">
+        <button class="btn-back" onclick="goTo('home')">← Back</button>
+        <div class="sidebar-badge">ID APPLICATION</div>
+        <h2 class="sidebar-title">Verify Your<br/><span class="hl">Identity</span></h2>
+        <p class="sidebar-sub">Enter your personal details. All fields marked * are required.</p>
+        <div class="sidebar-info">
+          <div class="sidebar-info-label">YOU WILL NEED</div>
+          <div class="sidebar-info-row">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            SA ID Document
+          </div>
+          <div class="sidebar-info-row">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            Proof of address
+          </div>
+          <div class="sidebar-info-row">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            Recent photograph
+          </div>
+        </div>
+      </div>
+
+      <div class="inner-form">
+        <div class="prog-wrap">
+          <div class="prog-step done"></div>
+          <div class="prog-step" id="pStep2"></div>
+          <div class="prog-step" id="pStep3"></div>
+          <span class="prog-lbl">Step 1 of 3 — Personal Details</span>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">ID NUMBER *</label>
+          <input class="f-input" id="idNum" type="tel" maxlength="13" placeholder="Enter your 13-digit ID number" oninput="onIDInput()"/>
+          <div class="f-counter" id="idCount">0 / 13 digits</div>
+          <div class="f-hint" id="idHint"></div>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">FULL NAME *</label>
+          <input class="f-input" id="idName" type="text" placeholder="As per your ID document" oninput="checkIDForm()"/>
+        </div>
+
+        <div class="f-row">
+          <div class="f-group">
+            <label class="f-label">DATE OF BIRTH</label>
+            <input class="f-input" id="idDob" type="date"/>
+          </div>
+          <div class="f-group">
+            <label class="f-label">NATIONALITY</label>
+            <select class="f-input" id="idNat">
+              <option value="">Select nationality</option>
+              <option>South African</option>
+              <option>Zimbabwean</option>
+              <option>Mozambican</option>
+              <option>Lesotho</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">CONTACT NUMBER</label>
+          <input class="f-input" id="idPhone" type="tel" placeholder="+27 XX XXX XXXX"/>
+        </div>
+
+        <div class="f-secure">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          Your information is encrypted and processed under POPIA regulations.
+        </div>
+
+        <button class="btn-primary" id="btnID" disabled onclick="submit('ID Application')">
+          Submit ID Application →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 3 — OPEN ACCOUNT
+       ══════════════════════════════════════════ -->
+  <section id="screen-open-account" class="screen">
+    <div class="inner-screen">
+
+      <div class="inner-sidebar">
+        <button class="btn-back" onclick="goTo('home')">← Back</button>
+        <div class="sidebar-badge">OPEN ACCOUNT</div>
+        <h2 class="sidebar-title">What Do<br/><span class="hl">You Need?</span></h2>
+        <p class="sidebar-sub">Choose an option to continue with your banking request.</p>
+        <div class="sidebar-info">
+          <div class="sidebar-info-label">NEED HELP?</div>
+          <div class="sidebar-info-row">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+            0800 123 456
+          </div>
+          <div class="sidebar-info-row">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Nearest branch
+          </div>
+        </div>
+      </div>
+
+      <div class="inner-form" style="justify-content:center">
+        <p class="f-label" style="letter-spacing:.12em;margin-bottom:8px">SELECT AN OPTION</p>
+
+        <div class="opt-cards">
+          <button class="opt-card" onclick="goTo('open-transactions')">
+            <div class="opt-icon" style="background:linear-gradient(135deg,#E3F0FF,#BBDEFB)">
+              <svg viewBox="0 0 24 24" style="fill:#1565C0"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+            </div>
+            <div class="opt-body">
+              <div class="opt-title">Open Transactions Account</div>
+              <div class="opt-desc">Daily banking and payments</div>
+            </div>
+            <div class="opt-arrow">›</div>
+          </button>
+
+          <button class="opt-card" onclick="goTo('replace-card')">
+            <div class="opt-icon" style="background:linear-gradient(135deg,#E8F5E9,#C8E6C9)">
+              <svg viewBox="0 0 24 24" style="fill:#2E7D32"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+            </div>
+            <div class="opt-body">
+              <div class="opt-title">Replace Debit Card</div>
+              <div class="opt-desc">Lost, stolen or damaged card</div>
+            </div>
+            <div class="opt-arrow">›</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Transactions sub-screen -->
+  <section id="screen-open-transactions" class="screen">
+    <div class="inner-screen">
+      <div class="inner-sidebar">
+        <button class="btn-back" onclick="goTo('open-account')">← Back</button>
+        <div class="sidebar-badge">OPEN ACCOUNT</div>
+        <h2 class="sidebar-title">Transactions<br/><span class="hl">Account</span></h2>
+        <p class="sidebar-sub">Complete this form to open your new transactions account.</p>
+        <div class="sidebar-info">
+          <div class="sidebar-info-label">ACCOUNT TYPES</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Cheque — Daily banking</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Savings — Interest-bearing</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Student — Under 25</div>
+        </div>
+      </div>
+      <div class="inner-form">
+        <div class="f-group">
+          <label class="f-label">ID NUMBER *</label>
+          <input class="f-input" type="tel" maxlength="13" placeholder="Enter your 13-digit ID number"/>
+        </div>
+        <div class="f-group">
+          <label class="f-label">FULL NAME *</label>
+          <input class="f-input" type="text" placeholder="As per your ID document"/>
+        </div>
+        <div class="f-group">
+          <label class="f-label">ACCOUNT TYPE *</label>
+          <div class="radio-group">
+            <div class="radio-opt" onclick="selRadio(this)"><div class="radio-dot"></div>Cheque Account</div>
+            <div class="radio-opt" onclick="selRadio(this)"><div class="radio-dot"></div>Savings Account</div>
+            <div class="radio-opt" onclick="selRadio(this)"><div class="radio-dot"></div>Student Account</div>
+          </div>
+        </div>
+        <div class="f-group">
+          <label class="f-label">INITIAL DEPOSIT (ZAR)</label>
+          <input class="f-input" type="number" placeholder="Minimum R 0.00"/>
+        </div>
+        <div class="f-secure">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+          Account subject to FICA verification and credit approval.
+        </div>
+        <button class="btn-primary" onclick="submit('Transactions Account')">Open Account →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Replace Card sub-screen -->
+  <section id="screen-replace-card" class="screen">
+    <div class="inner-screen">
+      <div class="inner-sidebar">
+        <button class="btn-back" onclick="goTo('open-account')">← Back</button>
+        <div class="sidebar-badge">OPEN ACCOUNT</div>
+        <h2 class="sidebar-title">Replace<br/><span class="hl">Debit Card</span></h2>
+        <p class="sidebar-sub">Your card will be blocked immediately and a new one couriered to you.</p>
+        <div class="sidebar-info">
+          <div class="sidebar-info-label">DELIVERY</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>3–5 business days</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>SMS on dispatch</div>
+        </div>
+      </div>
+      <div class="inner-form">
+        <div class="f-group">
+          <label class="f-label">ID NUMBER *</label>
+          <input class="f-input" type="tel" maxlength="13" placeholder="Enter your 13-digit ID number"/>
+        </div>
+        <div class="f-row">
+          <div class="f-group">
+            <label class="f-label">CARD LAST 4 DIGITS</label>
+            <input class="f-input" type="tel" maxlength="4" placeholder="XXXX"/>
+          </div>
+          <div class="f-group">
+            <label class="f-label">REASON *</label>
+            <select class="f-input">
+              <option value="">Select reason</option>
+              <option>Lost card</option>
+              <option>Stolen card</option>
+              <option>Damaged card</option>
+              <option>Expired card</option>
+            </select>
+          </div>
+        </div>
+        <div class="f-group">
+          <label class="f-label">DELIVERY ADDRESS *</label>
+          <input class="f-input" type="text" placeholder="Street address, City, Province, Code"/>
+        </div>
+        <div class="f-secure">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+          Your current card will be blocked immediately upon submission.
+        </div>
+        <button class="btn-primary" onclick="submit('Card Replacement')">Submit Request →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 4 — LOAN APPLICATION
+       ══════════════════════════════════════════ -->
+  <section id="screen-loan-app" class="screen">
+    <div class="inner-screen">
+
+      <div class="inner-sidebar">
+        <button class="btn-back" onclick="goTo('home')">← Back</button>
+        <div class="sidebar-badge">LOAN APPLICATION</div>
+        <h2 class="sidebar-title">Apply for<br/><span class="hl">a Loan</span></h2>
+        <p class="sidebar-sub">Quick decisions. Competitive rates. Simple process.</p>
+        <div id="loanEst" class="loan-est" style="display:none;margin-top:24px">
+          <div class="est-label">ESTIMATED MONTHLY</div>
+          <div class="est-amount" id="estAmt">R 0.00</div>
+          <div class="est-note">Indicative · 15% p.a. · Subject to approval</div>
+        </div>
+        <div class="sidebar-info" style="margin-top:auto">
+          <div class="sidebar-info-label">LOAN TYPES</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Home Improvement</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Vehicle Finance</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Business Loan</div>
+        </div>
+      </div>
+
+      <div class="inner-form">
+        <div class="f-group">
+          <label class="f-label">ID NUMBER *</label>
+          <input class="f-input" id="loanId" type="tel" maxlength="13" placeholder="Enter your 13-digit ID number"/>
+        </div>
+        <div class="f-group">
+          <label class="f-label">FULL NAME *</label>
+          <input class="f-input" id="loanName" type="text" placeholder="As per your ID document"/>
+        </div>
+        <div class="f-row">
+          <div class="f-group">
+            <label class="f-label">LOAN AMOUNT (ZAR) *</label>
+            <input class="f-input" id="loanAmt" type="number" placeholder="e.g. 50 000" oninput="calcLoan()"/>
+          </div>
+          <div class="f-group">
+            <label class="f-label">MONTHLY INCOME (ZAR)</label>
+            <input class="f-input" type="number" placeholder="e.g. 20 000"/>
+          </div>
+        </div>
+        <div class="f-group">
+          <label class="f-label">REPAYMENT TERM</label>
+          <div class="term-group">
+            <button class="term-btn" onclick="selTerm(this,6)">6 mo</button>
+            <button class="term-btn active" onclick="selTerm(this,12)">12 mo</button>
+            <button class="term-btn" onclick="selTerm(this,24)">24 mo</button>
+            <button class="term-btn" onclick="selTerm(this,36)">36 mo</button>
+            <button class="term-btn" onclick="selTerm(this,48)">48 mo</button>
+            <button class="term-btn" onclick="selTerm(this,60)">60 mo</button>
+          </div>
+        </div>
+        <div class="f-group">
+          <label class="f-label">LOAN PURPOSE *</label>
+          <select class="f-input">
+            <option value="">Select purpose</option>
+            <option>Home Improvement</option>
+            <option>Vehicle Finance</option>
+            <option>Education</option>
+            <option>Business</option>
+            <option>Personal</option>
+            <option>Debt Consolidation</option>
+          </select>
+        </div>
+        <div class="f-secure">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+          Subject to NCA regulations and credit bureau assessment.
+        </div>
+        <button class="btn-primary" onclick="submit('Loan Application')">Apply Now →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 5 — SERVICES
+       ══════════════════════════════════════════ -->
+  <section id="screen-services" class="screen">
+    <div class="inner-screen">
+
+      <div class="inner-sidebar">
+        <button class="btn-back" onclick="goTo('home')">← Back</button>
+        <div class="sidebar-badge">SERVICES</div>
+        <h2 class="sidebar-title">More<br/><span class="hl">Services</span></h2>
+        <p class="sidebar-sub">Access additional banking and support features.</p>
+        <div class="sidebar-info" style="margin-top:auto">
+          <div class="sidebar-info-label">SUPPORT</div>
+          <div class="sidebar-info-row" style="color:#1E88E5;font-weight:700"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>0800 123 456</div>
+          <div class="sidebar-info-row"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>Mon–Fri 08:00–17:00</div>
+        </div>
+      </div>
+
+      <div class="inner-form" style="justify-content:center">
+        <p class="f-label" style="letter-spacing:.12em;margin-bottom:20px">AVAILABLE SERVICES</p>
+        <div class="svc-grid">
+          <button class="svc-item" onclick="toast('Balance Enquiry — Coming soon')"><div class="svc-emoji">💳</div>Balance Enquiry</button>
+          <button class="svc-item" onclick="toast('Mini Statement — Coming soon')"><div class="svc-emoji">📄</div>Mini Statement</button>
+          <button class="svc-item" onclick="toast('PIN Change — Coming soon')"><div class="svc-emoji">🔑</div>PIN Change</button>
+          <button class="svc-item" onclick="toast('Biometric Auth — Coming soon')"><div class="svc-emoji">👆</div>Biometric Auth</button>
+          <button class="svc-item" onclick="toast('Card Activation — Coming soon')"><div class="svc-emoji">✅</div>Card Activation</button>
+          <button class="svc-item" onclick="toast('Complaints — Coming soon')"><div class="svc-emoji">📢</div>Complaints</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 6 — SUCCESS
+       ══════════════════════════════════════════ -->
+  <section id="screen-success" class="screen">
+    <div style="display:flex;flex:1;align-items:center;justify-content:center;padding:48px">
+      <div class="success-wrap">
+        <div class="success-ring">✓</div>
+        <h2 class="success-title">Submitted Successfully!</h2>
+        <p class="success-msg" id="successMsg">Your request has been received and is being processed.</p>
+        <div class="success-ref">
+          <div class="ref-lbl">REFERENCE NUMBER</div>
+          <div class="ref-num" id="refNum">DCX-000000</div>
+        </div>
+        <p class="success-note">Please keep your reference number for any follow-up queries.</p>
+        <button class="btn-primary" style="max-width:340px" onclick="goTo('home')">Back to Home →</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ─── SCREEN MAP ─────────────────────────────
+const SCREENS = {
+  'home':               'screen-home',
+  'id-app':             'screen-id-app',
+  'open-account':       'screen-open-account',
+  'open-transactions':  'screen-open-transactions',
+  'replace-card':       'screen-replace-card',
+  'loan-app':           'screen-loan-app',
+  'services':           'screen-services',
+  'success':            'screen-success',
+};
+
+function goTo(key) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(SCREENS[key]);
+  if (el) el.classList.add('active');
+}
+
+// ─── RIPPLE ──────────────────────────────────
+function ripple(e, el) {
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  el.appendChild(r);
+  setTimeout(() => r.remove(), 600);
+}
+
+// ─── CLOCK ───────────────────────────────────
+function tick() {
+  const d = new Date();
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = h + ':' + m;
+}
+tick(); setInterval(tick, 15000);
+
+// ─── ID FORM ─────────────────────────────────
+function onIDInput() {
+  const v = document.getElementById('idNum').value;
+  document.getElementById('idCount').textContent = v.length + ' / 13 digits';
+  const hint = document.getElementById('idHint');
+  if (v.length === 13) { hint.textContent = '✓ ID number complete'; hint.style.color='#2E7D32'; }
+  else if (v.length > 0) { hint.textContent = v.length + ' of 13 digits entered'; hint.style.color='#F57F17'; }
+  else { hint.textContent = ''; }
+  checkIDForm();
+}
+function checkIDForm() {
+  const ok = document.getElementById('idNum').value.length === 13 &&
+             document.getElementById('idName').value.trim().length > 2;
+  const btn = document.getElementById('btnID');
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.45';
+}
+
+// ─── RADIO ───────────────────────────────────
+function selRadio(el) {
+  el.closest('.radio-group').querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ─── LOAN CALC ───────────────────────────────
+let loanTerm = 12;
+function selTerm(el, m) {
+  document.querySelectorAll('.term-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  loanTerm = m;
+  calcLoan();
+}
+function calcLoan() {
+  const amt = parseFloat(document.getElementById('loanAmt').value || 0);
+  const est = document.getElementById('loanEst');
+  const amtEl = document.getElementById('estAmt');
+  if (amt > 0) {
+    const r = 0.15/12;
+    const pmt = (amt * r * Math.pow(1+r, loanTerm)) / (Math.pow(1+r, loanTerm)-1);
+    amtEl.textContent = 'R ' + pmt.toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2});
+    est.style.display = 'block';
+  } else {
+    est.style.display = 'none';
+  }
+}
+
+// ─── SUBMIT ──────────────────────────────────
+const MSG = {
+  'ID Application':      'Your ID Application has been received. We will verify your details within 2 business days.',
+  'Loan Application':    'Your Loan Application is being processed. A consultant will contact you within 24 hours.',
+  'Transactions Account':'Your account opening request has been submitted. FICA verification will follow.',
+  'Card Replacement':    'Card replacement submitted. Your old card is blocked. Delivery in 3–5 business days.',
+};
+function submit(type) {
+  document.getElementById('refNum').textContent = 'DCX-' + Math.floor(100000 + Math.random()*900000);
+  document.getElementById('successMsg').textContent = MSG[type] || 'Your request has been received.';
+  goTo('success');
+}
+
+// ─── TOAST ───────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ─── SERVICE WORKER ──────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+// ─── PREVENT ZOOM ON TABLET ──────────────────
+let lastTap = 0;
+document.addEventListener('touchend', e => {
+  const now = Date.now();
+  if (now - lastTap < 300) e.preventDefault();
+  lastTap = now;
+}, {passive: false});
+document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+</body>
+</html>
